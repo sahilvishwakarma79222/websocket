@@ -12,11 +12,11 @@ public class ChatCleanupScheduler {
 
     // Har 5 ghante (18,000,000 ms) mein app ko shut down karega
     // Render ise detect karke naya container start kar dega
-    @Scheduled(fixedRate = 18000000) 
-    public void scheduledHardRestart() {
-        log.warn("🚨 5 Hours Completed! Restarting application to refresh resources...");
-        
-        // System.exit(0) se process terminate hoga aur Render auto-restart trigger karega
-        System.exit(0);
-    }
+	// initialDelay = 18000000 (5 ghante baad pehla run hoga)
+	// fixedRate = 18000000 (uske baad har 5 ghante mein run hoga)
+	@Scheduled(initialDelay = 18000000, fixedRate = 18000000) 
+	public void scheduledHardRestart() {
+	    log.warn("🚨 5 Hours Completed! Restarting application to refresh resources...");
+	    System.exit(0);
+	}
 }
