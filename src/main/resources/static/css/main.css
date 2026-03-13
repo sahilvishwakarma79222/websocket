@@ -197,6 +197,8 @@ body {
     background: var(--bg-color);
     display: flex;
     flex-direction: column;
+    position: relative;
+    z-index: 1;
 }
 
 .chat-container {
@@ -209,6 +211,8 @@ body {
     background: transparent;
     flex: 1;
     min-height: 0;
+    position: relative;
+    z-index: 2;
 }
 
 /* Chat Header */
@@ -220,6 +224,8 @@ body {
     align-items: center;
     justify-content: space-between;
     flex-shrink: 0;
+    position: relative;
+    z-index: 10;
 }
 
 .header-left {
@@ -336,6 +342,7 @@ body {
     min-height: 0;
     overflow: hidden;
     position: relative;
+    z-index: 5;
 }
 
 /* Sidebar */
@@ -348,6 +355,8 @@ body {
     flex-shrink: 0;
     background: var(--surface-color);
     transition: all 0.3s ease;
+    position: relative;
+    z-index: 15;
 }
 
 .sidebar-header {
@@ -441,6 +450,7 @@ body {
     min-width: 0;
     min-height: 0;
     position: relative;
+    z-index: 10;
 }
 
 .connecting {
@@ -455,7 +465,7 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    z-index: 10;
+    z-index: 20;
     font-size: 0.9rem;
 }
 
@@ -482,6 +492,8 @@ body {
     flex-direction: column;
     gap: 10px;
     min-height: 0;
+    position: relative;
+    z-index: 5;
 }
 
 .message-area li {
@@ -609,7 +621,7 @@ body {
     align-items: center;
     gap: 8px;
     font-size: 0.8rem;
-    z-index: 5;
+    z-index: 15;
 }
 
 .typing-dots {
@@ -634,13 +646,15 @@ body {
     30% { transform: translateY(-8px); }
 }
 
-/* Message Form - CRITICAL FIXES */
+/* Message Form - CRITICAL FIX */
 .message-form {
     padding: 12px;
     border-top: 2px solid var(--border-color);
     background: var(--surface-color);
     flex-shrink: 0;
     width: 100%;
+    position: relative;
+    z-index: 20;
 }
 
 .input-group {
@@ -648,6 +662,8 @@ body {
     align-items: center;
     gap: 8px;
     width: 100%;
+    position: relative;
+    z-index: 25;
 }
 
 .input-group .form-control {
@@ -661,6 +677,8 @@ body {
     font-size: 16px;
     outline: none;
     transition: all 0.3s ease;
+    position: relative;
+    z-index: 30;
 }
 
 .input-group .form-control:focus {
@@ -684,6 +702,8 @@ body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    position: relative;
+    z-index: 35;
 }
 
 .input-group .icon-btn i {
@@ -705,6 +725,8 @@ body {
     flex-shrink: 0;
     transition: all 0.3s ease;
     box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+    position: relative;
+    z-index: 40;
 }
 
 .send-btn:hover {
@@ -716,281 +738,14 @@ body {
     font-size: 1.1rem;
 }
 
-/* ===== RESPONSIVE DESIGN - MOBILE FIRST ===== */
-
-/* Tablet Styles */
-@media screen and (max-width: 1024px) {
-    .chat-sidebar {
-        width: 220px;
-    }
-}
-
-/* Mobile Styles */
-@media screen and (max-width: 768px) {
-    #chat-page {
-        padding: 8px;
-    }
-    
-    .chat-header {
-        padding: 10px 12px;
-    }
-    
-    .chat-info h2 {
-        font-size: 1rem;
-    }
-    
-    .header-right {
-        gap: 6px;
-    }
-    
-    .icon-btn {
-        width: 36px;
-        height: 36px;
-    }
-    
-    .avatar {
-        width: 32px;
-        height: 32px;
-        font-size: 1rem;
-    }
-    
-    /* Mobile Menu */
-    .mobile-menu-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .chat-sidebar {
-        position: fixed;
-        top: 0;
-        left: -280px;
-        width: 260px;
-        height: 100vh;
-        z-index: 1000;
-        border-radius: 0 20px 20px 0;
-        transition: left 0.3s ease;
-    }
-    
-    .chat-sidebar.active {
-        left: 0;
-    }
-    
-    /* Overlay for mobile */
-    .sidebar-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 999;
-    }
-    
-    .sidebar-overlay.active {
-        display: block;
-    }
-    
-    /* Message area adjustments */
-    .message-area li {
-        max-width: 85%;
-    }
-    
-    .message-bubble {
-        padding: 8px 12px;
-    }
-    
-    .message-content {
-        font-size: 0.9rem;
-    }
-    
-    /* Input group adjustments */
-    .input-group .form-control {
-        padding: 12px 16px;
-        font-size: 16px;
-    }
-    
-    .input-group .icon-btn {
-        width: 42px;
-        height: 42px;
-    }
-    
-    .send-btn {
-        padding: 12px 18px;
-    }
-    
-    .send-text {
-        display: none; /* Hide text on mobile */
-    }
-    
-    .typing-indicator {
-        bottom: 75px;
-        left: 12px;
-        font-size: 0.75rem;
-        padding: 6px 12px;
-    }
-}
-
-/* Small Mobile Styles */
-@media screen and (max-width: 480px) {
-    .chat-header {
-        padding: 8px 10px;
-    }
-    
-    .chat-info h2 {
-        font-size: 0.95rem;
-    }
-    
-    .online-status {
-        font-size: 0.7rem;
-    }
-    
-    .icon-btn {
-        width: 34px;
-        height: 34px;
-    }
-    
-    .avatar {
-        width: 30px;
-        height: 30px;
-        font-size: 0.9rem;
-    }
-    
-    .message-area {
-        padding: 12px;
-    }
-    
-    .message-area li {
-        max-width: 90%;
-    }
-    
-    .message-avatar {
-        width: 26px;
-        height: 26px;
-        font-size: 0.8rem;
-    }
-    
-    .message-bubble {
-        padding: 8px 10px;
-    }
-    
-    .message-content {
-        font-size: 0.85rem;
-    }
-    
-    .message-time {
-        font-size: 0.6rem;
-    }
-    
-    .input-group .form-control {
-        padding: 10px 14px;
-    }
-    
-    .input-group .icon-btn {
-        width: 38px;
-        height: 38px;
-    }
-    
-    .send-btn {
-        padding: 10px 14px;
-    }
-    
-    .mobile-menu-btn {
-        width: 45px;
-        height: 45px;
-        bottom: 90px;
-        right: 15px;
-    }
-}
-
-/* Very Small Mobile */
-@media screen and (max-width: 360px) {
-    .input-group .icon-btn {
-        width: 34px;
-        height: 34px;
-    }
-    
-    .send-btn {
-        padding: 10px 12px;
-    }
-    
-    .chat-sidebar {
-        width: 240px;
-    }
-}
-
-/* iOS Safari Fix */
-@supports (-webkit-touch-callout: none) {
-    input, textarea {
-        font-size: 16px !important;
-    }
-}
-
-/* Emoji Picker */
-.emoji-picker-simulated {
-    position: absolute;
-    bottom: 90px;
-    left: 16px;
-    background: var(--surface-color);
-    border-radius: 20px;
-    padding: 12px;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    box-shadow: var(--shadow);
-    z-index: 1000;
-    border: 2px solid var(--border-color);
-}
-
-.emoji-picker-simulated span {
-    width: 45px;
-    height: 45px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    cursor: pointer;
-    border-radius: 12px;
-    transition: all 0.3s ease;
-}
-
-.emoji-picker-simulated span:hover {
-    background: var(--hover-bg);
-    transform: scale(1.1);
-}
-
-@media screen and (max-width: 480px) {
-    .emoji-picker-simulated {
-        bottom: 80px;
-        left: 8px;
-        right: 8px;
-        grid-template-columns: repeat(4, 1fr);
-        padding: 10px;
-    }
-    
-    .emoji-picker-simulated span {
-        width: 40px;
-        height: 40px;
-        font-size: 1.3rem;
-    }
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-    width: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--primary-color);
-    border-radius: 10px;
-}
-
 /* ===== LOVE CALCULATOR - COMPACT ===== */
 .love-calculator-section {
     padding: 10px 8px;
     border-top: 2px solid var(--border-color);
     margin-top: auto;
+    position: relative;
+    z-index: 50;
+    background: var(--surface-color);
 }
 
 .calculator-button {
@@ -1009,6 +764,8 @@ body {
     gap: 8px;
     transition: all 0.3s ease;
     box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3);
+    position: relative;
+    z-index: 55;
 }
 
 .calculator-button i {
@@ -1021,7 +778,7 @@ body {
     box-shadow: 0 6px 15px rgba(255, 71, 87, 0.4);
 }
 
-/* Calculator Modal - Compact */
+/* Calculator Modal */
 .calculator-modal {
     display: none;
     position: fixed;
@@ -1030,7 +787,7 @@ body {
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.5);
-    z-index: 2000;
+    z-index: 1000;
     align-items: center;
     justify-content: center;
 }
@@ -1048,6 +805,7 @@ body {
     animation: slideUp 0.3s ease;
     box-shadow: 0 15px 30px rgba(255, 71, 87, 0.3);
     border: 2px solid #ff6b6b;
+    z-index: 1100;
 }
 
 .calculator-header {
@@ -1237,22 +995,6 @@ body {
     background: #e0e0e0;
 }
 
-/* Confetti - Small */
-.confetti {
-    position: fixed;
-    width: 6px;
-    height: 6px;
-    z-index: 9999;
-    animation: confettiFall 2.5s ease-in forwards;
-}
-
-@keyframes confettiFall {
-    to {
-        transform: translateY(100vh) rotate(360deg);
-        opacity: 0;
-    }
-}
-
 @keyframes heartbeat {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.1); }
@@ -1263,8 +1005,239 @@ body {
     50% { transform: translateY(-3px); }
 }
 
-/* Mobile Optimized */
-@media screen and (max-width: 380px) {
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablet Styles */
+@media screen and (max-width: 1024px) {
+    .chat-sidebar {
+        width: 220px;
+    }
+}
+
+/* Mobile Styles - FIXED */
+@media screen and (max-width: 768px) {
+    #chat-page {
+        padding: 8px;
+    }
+    
+    .chat-header {
+        padding: 10px 12px;
+        z-index: 50;
+    }
+    
+    .chat-info h2 {
+        font-size: 1rem;
+    }
+    
+    .header-right {
+        gap: 6px;
+    }
+    
+    .icon-btn {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+    }
+    
+    /* Mobile Menu */
+    .mobile-menu-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 200;
+    }
+    
+    .chat-sidebar {
+        position: fixed;
+        top: 0;
+        left: -280px;
+        width: 260px;
+        height: 100vh;
+        z-index: 150;
+        border-radius: 0 20px 20px 0;
+        transition: left 0.3s ease;
+    }
+    
+    .chat-sidebar.active {
+        left: 0;
+    }
+    
+    /* Overlay for mobile */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 140;
+    }
+    
+    .sidebar-overlay.active {
+        display: block;
+    }
+    
+    /* Chat content takes full width */
+    .chat-main {
+        flex-direction: column;
+    }
+    
+    .chat-content {
+        width: 100%;
+        z-index: 50;
+    }
+    
+    /* Message area adjustments */
+    .message-area {
+        padding: 12px;
+        height: calc(100vh - 200px);
+    }
+    
+    .message-area li {
+        max-width: 85%;
+    }
+    
+    .message-bubble {
+        padding: 8px 12px;
+    }
+    
+    .message-content {
+        font-size: 0.9rem;
+    }
+    
+    /* Input group - FIXED VISIBILITY */
+    .input-group {
+        gap: 5px;
+    }
+    
+    .input-group .form-control {
+        padding: 12px 16px;
+        font-size: 16px;
+        min-height: 45px;
+    }
+    
+    .input-group .icon-btn {
+        width: 45px;
+        height: 45px;
+        min-width: 45px;
+    }
+    
+    .send-btn {
+        padding: 12px 16px;
+        min-width: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .send-text {
+        display: none;
+    }
+    
+    .typing-indicator {
+        bottom: 75px;
+        left: 12px;
+        font-size: 0.75rem;
+        padding: 6px 12px;
+        z-index: 100;
+    }
+    
+    /* Love calculator on mobile */
+    .love-calculator-section {
+        padding: 8px;
+        z-index: 60;
+    }
+    
+    .calculator-button {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
+
+/* Small Mobile Styles */
+@media screen and (max-width: 480px) {
+    .chat-header {
+        padding: 8px 10px;
+    }
+    
+    .chat-info h2 {
+        font-size: 0.95rem;
+    }
+    
+    .online-status {
+        font-size: 0.7rem;
+    }
+    
+    .icon-btn {
+        width: 34px;
+        height: 34px;
+    }
+    
+    .avatar {
+        width: 30px;
+        height: 30px;
+        font-size: 0.9rem;
+    }
+    
+    .message-area {
+        padding: 10px;
+    }
+    
+    .message-area li {
+        max-width: 90%;
+    }
+    
+    .message-avatar {
+        width: 26px;
+        height: 26px;
+        font-size: 0.8rem;
+    }
+    
+    .message-bubble {
+        padding: 8px 10px;
+    }
+    
+    .message-content {
+        font-size: 0.85rem;
+    }
+    
+    .message-time {
+        font-size: 0.6rem;
+    }
+    
+    /* Input - ensure visibility */
+    .input-group .form-control {
+        padding: 10px 14px;
+        font-size: 16px;
+        height: 45px;
+    }
+    
+    .input-group .icon-btn {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+    }
+    
+    .send-btn {
+        padding: 10px 14px;
+        min-width: 55px;
+    }
+    
+    .mobile-menu-btn {
+        width: 45px;
+        height: 45px;
+        bottom: 90px;
+        right: 15px;
+        z-index: 200;
+    }
+    
+    /* Calculator modal for small screens */
     .calculator-content {
         max-width: 280px;
     }
@@ -1272,11 +1245,106 @@ body {
     .result-percentage {
         font-size: 36px;
     }
+}
+
+/* Very Small Mobile */
+@media screen and (max-width: 360px) {
+    .input-group .icon-btn {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+    }
     
-    .calculator-header h3 {
-        font-size: 18px;
+    .send-btn {
+        padding: 10px 12px;
+        min-width: 50px;
+    }
+    
+    .chat-sidebar {
+        width: 240px;
     }
 }
 
+/* iOS Safari Fix */
+@supports (-webkit-touch-callout: none) {
+    input, textarea {
+        font-size: 16px !important;
+    }
+}
 
+/* Emoji Picker - Fixed */
+.emoji-picker-simulated {
+    position: absolute;
+    bottom: 90px;
+    left: 16px;
+    background: var(--surface-color);
+    border-radius: 20px;
+    padding: 12px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    box-shadow: var(--shadow);
+    z-index: 500;
+    border: 2px solid var(--border-color);
+}
 
+.emoji-picker-simulated span {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.emoji-picker-simulated span:hover {
+    background: var(--hover-bg);
+    transform: scale(1.1);
+}
+
+@media screen and (max-width: 480px) {
+    .emoji-picker-simulated {
+        bottom: 80px;
+        left: 8px;
+        right: 8px;
+        grid-template-columns: repeat(4, 1fr);
+        padding: 10px;
+        z-index: 500;
+    }
+    
+    .emoji-picker-simulated span {
+        width: 40px;
+        height: 40px;
+        font-size: 1.3rem;
+    }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 10px;
+}
+
+/* Confetti */
+.confetti {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    z-index: 2000;
+    animation: confettiFall 2.5s ease-in forwards;
+    pointer-events: none;
+}
+
+@keyframes confettiFall {
+    to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
