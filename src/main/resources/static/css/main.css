@@ -1,10 +1,8 @@
 :root {
     --primary: #ff4d6d;
-    --primary-light: #ffebef;
     --bg: #fff5f7;
     --surface: #ffffff;
     --text: #2d3436;
-    --text-light: #636e72;
     --msg-sent: #ff4d6d;
     --msg-received: #ffffff;
     --border: #f1f2f6;
@@ -14,144 +12,76 @@
     --bg: #121212;
     --surface: #1e1e1e;
     --text: #f5f5f5;
-    --text-light: #b0b0b0;
     --msg-received: #2d2d2d;
     --border: #333;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
-body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
 
-/* Utilities */
+html, body { 
+    height: 100%; width: 100%; 
+    overflow: hidden; position: fixed;
+    background: var(--bg);
+}
+
 .hidden { display: none !important; }
 
-/* Login Card */
-.page-overlay { 
-    height: 100vh; display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(135deg, #ff4d6d 0%, #ff85a2 100%);
-}
-.login-card { 
-    background: white; padding: 30px; border-radius: 24px; text-align: center;
-    width: 90%; max-width: 360px; box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-}
-.heart-pulse { font-size: 4rem; color: #ff4d6d; animation: pulse 1.5s infinite; }
-.login-card h1 { margin: 15px 0 5px; color: #333; }
-.login-card input { 
-    width: 100%; padding: 14px; margin: 20px 0; border: 2px solid #eee;
-    border-radius: 12px; font-size: 1rem; outline: none;
-}
-.btn-main { 
-    width: 100%; padding: 14px; background: #ff4d6d; color: white;
-    border: none; border-radius: 12px; font-weight: 600; cursor: pointer;
-}
+/* Login */
+.page-overlay { height: 100dvh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #ff4d6d, #ff85a2); }
+.login-card { background: white; padding: 30px; border-radius: 25px; width: 90%; max-width: 350px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+.heart-logo { font-size: 3rem; color: #ff4d6d; margin-bottom: 1rem; animation: pulse 1.5s infinite; }
+.login-card input { width: 100%; padding: 14px; margin: 15px 0; border: 2px solid #eee; border-radius: 12px; outline: none; }
+.btn-primary { width: 100%; padding: 14px; background: #ff4d6d; color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; }
 
-/* App Layout */
-.app-container { height: 100vh; display: flex; flex-direction: column; }
-.chat-header { 
-    height: 70px; background: var(--surface); display: flex; 
-    align-items: center; justify-content: space-between; 
-    padding: 0 20px; border-bottom: 1px solid var(--border);
-}
-.header-left { display: flex; align-items: center; gap: 15px; }
-.status-indicator { font-size: 0.8rem; color: var(--text-light); display: flex; align-items: center; gap: 5px; }
-.dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; }
-
+/* App Structure */
+.app-shell { height: 100dvh; display: flex; flex-direction: column; }
+.chat-header { height: 65px; background: var(--surface); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
 .main-body { flex: 1; display: flex; overflow: hidden; position: relative; }
 
 /* Sidebar */
-.sidebar { 
-    width: 280px; background: var(--surface); border-right: 1px solid var(--border);
-    display: flex; flex-direction: column; transition: 0.3s ease;
-}
-.sidebar-label { padding: 20px; font-weight: 600; color: var(--primary); font-size: 0.9rem; }
-.user-list { flex: 1; overflow-y: auto; padding: 0 10px; }
+.sidebar { width: 280px; background: var(--surface); border-right: 1px solid var(--border); transition: 0.3s ease; }
+.user-list { padding: 10px; }
 
-/* Message Area */
-.chat-content { flex: 1; display: flex; flex-direction: column; background: var(--bg); position: relative; }
-.message-list { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
-
-.chat-message { max-width: 80%; padding: 12px 16px; border-radius: 18px; position: relative; line-height: 1.4; }
-.chat-message.sent { align-self: flex-end; background: var(--msg-sent); color: white; border-bottom-right-radius: 4px; }
-.chat-message.received { align-self: flex-start; background: var(--msg-received); border-bottom-left-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-
-.event-msg { align-self: center; background: rgba(0,0,0,0.05); padding: 5px 15px; border-radius: 20px; font-size: 0.75rem; color: var(--text-light); }
-
-/* Input Area */
-.input-area { 
-    background: var(--surface); padding: 15px 20px; 
-    display: flex; align-items: center; gap: 12px; border-top: 1px solid var(--border);
-}
-.input-area input { 
-    flex: 1; padding: 12px 18px; border: none; background: var(--bg);
-    border-radius: 25px; color: var(--text); font-size: 1rem; outline: none;
-}
-.icon-btn { background: none; border: none; font-size: 1.3rem; color: var(--primary); cursor: pointer; }
-.send-btn { 
-    background: var(--primary); color: white; width: 45px; height: 45px;
-    border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+/* Chat Area */
+.chat-area { flex: 1; display: flex; flex-direction: column; background: var(--bg); position: relative; }
+.message-list { 
+    flex: 1; overflow-y: auto; padding: 20px; 
+    display: flex; flex-direction: column; gap: 12px;
+    padding-bottom: 120px; /* Space so messages don't hide behind lifted input */
 }
 
-/* Mobile Responsive */
-/* --- Mobile View Critical Fix --- */
+/* Bubbles */
+.chat-message { max-width: 80%; padding: 12px 16px; border-radius: 18px; line-height: 1.4; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+.chat-message.sent { align-self: flex-end; background: var(--primary); color: white; border-bottom-right-radius: 2px; }
+.chat-message.received { align-self: flex-start; background: var(--msg-received); border-bottom-left-radius: 2px; }
+.sender-name { display: block; font-size: 0.7rem; font-weight: 700; margin-bottom: 3px; color: var(--primary); }
+
+/* LIFTED INPUT (The Fix) */
+.input-form {
+    position: absolute;
+    bottom: 10dvh; /* Exact 10% up from bottom */
+    left: 15px;
+    right: 15px;
+    background: var(--surface);
+    padding: 10px 15px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    border: 1px solid var(--border);
+    z-index: 1000;
+}
+
+.input-form input { flex: 1; border: none; background: transparent; color: var(--text); font-size: 16px; outline: none; }
+.icon-btn { background: none; border: none; font-size: 1.2rem; color: var(--primary); cursor: pointer; }
+.send-btn { background: var(--primary); color: white; width: 42px; height: 42px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+/* Mobile Menu Fix */
 @media (max-width: 768px) {
-    /* Pure page ko fix height pe rakhta hai taaki keyboard issue na kare */
-    body, html {
-        height: 100%;
-        position: fixed;
-        width: 100%;
-        overflow: hidden;
-    }
-
-    .app-container {
-        height: 100dvh; /* Dynamic viewport height for mobile browsers */
-        display: flex;
-        flex-direction: column;
-    }
-
-    .main-body {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        min-height: 0; /* Important: allows child to scroll */
-        position: relative;
-    }
-
-    .chat-content {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    /* Message list area should take all space except input */
-    .message-list {
-        flex: 1;
-        overflow-y: auto;
-        padding: 15px;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    /* Input area ko bottom par fix karta hai */
-    .input-area {
-        position: relative;
-        bottom: 0;
-        width: 100%;
-        padding: 10px 15px;
-        background: var(--surface);
-        border-top: 1px solid var(--border);
-        z-index: 10;
-        margin-bottom: constant(safe-area-inset-bottom); /* iOS Fix */
-        margin-bottom: env(safe-area-inset-bottom); /* iOS Fix */
-    }
-
-    .input-area input {
-        font-size: 16px; /* Prevents iOS auto-zoom */
-        height: 45px;
-    }
-
-    .send-btn {
-        min-width: 45px;
-        min-height: 45px;
-    }
+    .sidebar { position: absolute; left: -100%; height: 100%; z-index: 2000; }
+    .sidebar.active { left: 0; }
+    .overlay.active { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1500; display: block; }
 }
 
-@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }

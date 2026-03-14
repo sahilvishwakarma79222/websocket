@@ -3,61 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Jyoti's ❤️ Chat</title>
+    <title>Jyoti's ❤️ World</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css" />
 </head>
 <body>
-
     <div id="username-page" class="page-overlay">
-        <div class="login-card">
-            <div class="heart-pulse"><i class="fas fa-heart"></i></div>
-            <h1>Jyoti ❤️ Chat</h1>
-            <p>Apna naam likh kar shuru karein</p>
+        <div class="glass-card login-card">
+            <i class="fas fa-heart heart-logo"></i>
+            <h1>Jyoti Chat</h1>
             <form id="usernameForm">
-                <input type="text" id="name" placeholder="Enter Name..." autocomplete="off" required />
-                <button type="submit" class="btn-main">Join Chat</button>
+                <input type="text" id="name" placeholder="Enter your name..." required autocomplete="off" />
+                <button type="submit" class="btn-primary">Join Chat</button>
             </form>
         </div>
     </div>
 
     <div id="chat-page" class="hidden">
-        <div class="app-container">
+        <div class="app-shell">
             <header class="chat-header">
-                <div class="header-left">
-                    <button id="mobile-menu-toggle" class="icon-btn"><i class="fas fa-bars"></i></button>
-                    <div class="chat-title">
+                <div class="h-left">
+                    <button id="mobile-menu-toggle" class="icon-btn"><i class="fas fa-users"></i></button>
+                    <div class="chat-meta">
                         <h2>Jyoti Chat</h2>
-                        <span class="status-indicator"><span class="dot"></span> <span id="online-count">1</span> Online</span>
+                        <span class="status"><span class="dot"></span> <span id="online-count">1</span> online</span>
                     </div>
                 </div>
-                <div class="header-right">
+                <div class="h-right">
                     <button id="theme-toggle" class="icon-btn"><i class="fas fa-moon"></i></button>
-                    <div class="user-profile">
-                        <div class="avatar" id="header-avatar">?</div>
-                    </div>
+                    <div class="avatar" id="header-avatar">?</div>
                 </div>
             </header>
 
             <div class="main-body">
                 <aside id="chat-sidebar" class="sidebar">
-                    <div class="sidebar-label">Online Members</div>
+                    <div class="sidebar-label">Online Lovers</div>
                     <div id="onlineUsers" class="user-list"></div>
                 </aside>
 
-                <main class="chat-content">
-                    <div class="connecting hidden">Connecting to server...</div>
-                    <ul id="messageArea" class="message-list">
-                        <li class="event-msg">❤️ Welcome to the Chat ❤️</li>
-                    </ul>
-
-                    <div id="typingIndicator" class="typing hidden">
-                        <span id="typingText">Someone is typing</span>
-                        <div class="dots"><span></span><span></span><span></span></div>
-                    </div>
-
-                    <form id="messageForm" class="input-area">
+                <main class="chat-area">
+                    <ul id="messageArea" class="message-list"></ul>
+                    
+                    <form id="messageForm" class="input-form">
                         <button type="button" id="emojiBtn" class="icon-btn"><i class="far fa-smile"></i></button>
                         <input type="text" id="message" placeholder="Type a message..." autocomplete="off" />
                         <button type="submit" class="send-btn"><i class="fas fa-paper-plane"></i></button>
@@ -65,9 +53,8 @@
                 </main>
             </div>
         </div>
+        <div id="sidebar-overlay" class="overlay hidden"></div>
     </div>
-
-    <div id="sidebar-overlay" class="overlay hidden"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>

@@ -11,7 +11,7 @@ const messageInput = document.querySelector('#message');
 const messageArea = document.querySelector('#messageArea');
 const themeToggle = document.querySelector('#theme-toggle');
 const sidebar = document.querySelector('#chat-sidebar');
-const mobileMenuBtn = document.querySelector('#mobile-menu-toggle');
+const menuBtn = document.querySelector('#mobile-menu-toggle');
 const overlay = document.querySelector('#sidebar-overlay');
 
 function connect(event) {
@@ -19,10 +19,9 @@ function connect(event) {
     if(username) {
         usernamePage.classList.add('hidden');
         chatPage.classList.remove('hidden');
-
         const socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
-        stompClient.connect({}, onConnected, onError);
+        stompClient.connect({}, onConnected, (err) => alert("Connection Error!"));
     }
     event.preventDefault();
 }
@@ -33,19 +32,10 @@ function onConnected() {
     document.querySelector('#header-avatar').textContent = username.charAt(0).toUpperCase();
 }
 
-function onError() {
-    alert("Connection lost! Please refresh.");
-}
-
 function sendMessage(event) {
-    const messageContent = messageInput.value.trim();
-    if(messageContent && stompClient) {
-        const chatMessage = {
-            sender: username,
-            content: messageContent,
-            type: 'CHAT'
-        };
-        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+    const msg = messageInput.value.trim();
+    if(msg && stompClient) {
+        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify({sender: username, content: msg, type: 'CHAT'}));
         messageInput.value = '';
     }
     event.preventDefault();
@@ -53,41 +43,26 @@ function sendMessage(event) {
 
 function onMessageReceived(payload) {
     const message = JSON.parse(payload.body);
-    const messageElement = document.createElement('li');
-
-    if(message.type === 'JOIN') {
-        messageElement.classList.add('event-msg');
-        messageElement.textContent = message.sender + ' joined!';
-    } else if (message.type === 'LEAVE') {
-        messageElement.classList.add('event-msg');
-        messageElement.textContent = message.sender + ' left!';
+    const li = document.createElement('li');
+    if(message.type === 'JOIN' || message.type === 'LEAVE') {
+        li.className = 'event-msg';
+        li.style.cssText = "align-self:center; font-size:0.7rem; color:#888; margin:5px 0;";
+        li.textContent = `${message.sender} ${message.type === 'JOIN' ? 'joined' : 'left'}`;
     } else {
-        messageElement.classList.add('chat-message');
-        messageElement.classList.add(message.sender === username ? 'sent' : 'received');
-        messageElement.textContent = message.content;
+        li.className = `chat-message ${message.sender === username ? 'sent' : 'received'}`;
+        const nameLabel = message.sender === username ? '' : `<span class="sender-name">${message.sender}</span>`;
+        li.innerHTML = `${nameLabel}<div>${message.content}</div>`;
     }
-
-    messageArea.appendChild(messageElement);
+    messageArea.appendChild(li);
     messageArea.scrollTop = messageArea.scrollHeight;
 }
 
-// Sidebar toggle for mobile
-mobileMenuBtn.onclick = () => {
-    sidebar.classList.toggle('active');
-    overlay.classList.toggle('active');
-};
-
-overlay.onclick = () => {
-    sidebar.classList.remove('active');
-    overlay.classList.remove('active');
-};
-
-// Theme Toggle
+menuBtn.onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
+overlay.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
 themeToggle.onclick = () => {
-    const current = document.documentElement.getAttribute('data-theme');
-    const target = current === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', target);
-    themeToggle.innerHTML = target === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    themeToggle.innerHTML = isDark ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
 };
 
 usernameForm.addEventListener('submit', connect, true);
