@@ -19,9 +19,10 @@ function connect(event) {
     if(username) {
         usernamePage.classList.add('hidden');
         chatPage.classList.remove('hidden');
+
         const socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
-        stompClient.connect({}, onConnected, (err) => alert("Connection Error!"));
+        stompClient.connect({}, onConnected, (err) => alert("Error connecting!"));
     }
     event.preventDefault();
 }
@@ -35,7 +36,11 @@ function onConnected() {
 function sendMessage(event) {
     const msg = messageInput.value.trim();
     if(msg && stompClient) {
-        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify({sender: username, content: msg, type: 'CHAT'}));
+        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify({
+            sender: username,
+            content: msg,
+            type: 'CHAT'
+        }));
         messageInput.value = '';
     }
     event.preventDefault();
@@ -44,21 +49,25 @@ function sendMessage(event) {
 function onMessageReceived(payload) {
     const message = JSON.parse(payload.body);
     const li = document.createElement('li');
+
     if(message.type === 'JOIN' || message.type === 'LEAVE') {
         li.className = 'event-msg';
-        li.style.cssText = "align-self:center; font-size:0.7rem; color:#888; margin:5px 0;";
-        li.textContent = `${message.sender} ${message.type === 'JOIN' ? 'joined' : 'left'}`;
+        li.textContent = `${message.sender} ${message.type === 'JOIN' ? 'joined!' : 'left!'}`;
     } else {
         li.className = `chat-message ${message.sender === username ? 'sent' : 'received'}`;
-        const nameLabel = message.sender === username ? '' : `<span class="sender-name">${message.sender}</span>`;
-        li.innerHTML = `${nameLabel}<div>${message.content}</div>`;
+        const nameSpan = message.sender === username ? '' : `<span class="sender-name">${message.sender}</span>`;
+        li.innerHTML = `${nameSpan}<div>${message.content}</div>`;
     }
+
     messageArea.appendChild(li);
     messageArea.scrollTop = messageArea.scrollHeight;
 }
 
+// Menu Toggle
 menuBtn.onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
 overlay.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
+
+// Theme Toggle
 themeToggle.onclick = () => {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
