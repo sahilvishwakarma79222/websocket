@@ -16,9 +16,6 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 public class WebSocketEventListener {
 
     private final SimpMessageSendingOperations messagingTemplate;
-    
-    // Agar scheduler add kiya hai to ye dependency bhi le sakte ho
-    // private final ChatCleanupScheduler cleanupScheduler;
 
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
@@ -28,11 +25,7 @@ public class WebSocketEventListener {
         
         if (username != null) {
             log.info("User disconnected: {}", username);
-            
-            // Agar session tracking use kar rahe ho to yahan remove karo
-            // if (cleanupScheduler != null) {
-            //     cleanupScheduler.updateSessionActivity(sessionId); // Negative update?
-            // }
+          
             
             var chatMessage = ChatMessage.builder()
                     .type(MessageType.LEAVE)

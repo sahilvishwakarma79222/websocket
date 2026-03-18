@@ -15,9 +15,25 @@ const onlineUsersList = document.querySelector('#onlineUsers');
 const typingIndicator = document.querySelector('#typingIndicator');
 const typingText = document.querySelector('#typingText');
 const emojiBtn = document.querySelector('#emojiBtn');
-const attachBtn = document.querySelector('#attachBtn');
 const mobileMenuBtn = document.querySelector('#mobile-menu-toggle');
 const chatSidebar = document.querySelector('#chat-sidebar');
+
+// Love Calculator Elements
+const calculatorModal = document.querySelector('#calculatorModal');
+const loveCalculatorBtn = document.querySelector('#loveCalculatorBtn');
+const closeCalculator = document.querySelector('.close-calculator');
+const calculateBtn = document.querySelector('#calculateLove');
+const yourNameInput = document.querySelector('#yourName');
+const partnerNameInput = document.querySelector('#partnerName');
+const loveResult = document.querySelector('#loveResult');
+const lovePercentage = document.querySelector('#lovePercentage');
+const loveMeter = document.querySelector('#loveMeter');
+const loveMessage = document.querySelector('#loveMessage');
+const loveHearts = document.querySelector('#loveHearts');
+const shareLoveResult = document.querySelector('#shareLoveResult');
+const resetLoveCalculator = document.querySelector('#resetLoveCalculator');
+const clearChatBtn = document.querySelector('#clearChatBtn');
+const shareChatBtn = document.querySelector('#shareChatBtn');
 
 // State Variables
 let stompClient = null;
@@ -25,12 +41,11 @@ let username = null;
 let onlineUsers = new Set();
 let typingTimeout = null;
 
-// ===== NOTIFICATION SYSTEM - COMPLETELY SILENT =====
+// ===== NOTIFICATION SYSTEM =====
 let unreadCount = 0;
 let originalTitle = document.title;
 let notificationInterval = null;
 
-// Silent function - no sound, just visual
 function notifyNewMessage(message) {
     if (message.sender === username || message.type !== 'CHAT') {
         return;
@@ -109,6 +124,7 @@ function connect(event) {
     
     if(username) {
         headerAvatar.textContent = username.charAt(0).toUpperCase();
+        if (yourNameInput) yourNameInput.value = username;
         
         usernamePage.style.animation = 'fadeOut 0.3s ease';
         setTimeout(() => {
@@ -117,7 +133,6 @@ function connect(event) {
             chatPage.style.animation = 'fadeIn 0.3s ease';
         }, 300);
 
-        // WebSocket connection
         const socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
         
@@ -150,11 +165,11 @@ function onConnected() {
 
 function onError(error) {
     connectingElement.innerHTML = `
-        <i class="fas fa-exclamation-circle" style="color: #ff6b6b;"></i>
-        <span style="color: #ff6b6b;">Connection failed! Please refresh.</span>
+        <i class="fas fa-exclamation-circle" style="color: #667eea;"></i>
+        <span style="color: #667eea;">Connection failed! Please refresh.</span>
     `;
-    connectingElement.style.color = '#f56565';
-    connectingElement.style.background = 'rgba(245, 101, 101, 0.1)';
+    connectingElement.style.color = '#667eea';
+    connectingElement.style.background = 'rgba(102, 126, 234, 0.1)';
 }
 
 // ===== MESSAGE HANDLING =====
@@ -183,7 +198,7 @@ function onMessageReceived(payload) {
     if(message.type === 'JOIN') {
         onlineUsers.add(message.sender);
         updateOnlineUsersList();
-        displaySystemMessage(`${message.sender} joined the chat! 🎉`);
+        displaySystemMessage(`${message.sender} joined the chat! 👋`);
         
     } else if (message.type === 'LEAVE') {
         onlineUsers.delete(message.sender);
@@ -192,7 +207,7 @@ function onMessageReceived(payload) {
         
     } else {
         displayChatMessage(message);
-        notifyNewMessage(message); // Visual only, no sound
+        notifyNewMessage(message);
     }
 }
 
@@ -336,7 +351,7 @@ function stopTyping() {
 
 // ===== EMOJI PICKER =====
 function showEmojiPicker() {
-    const emojis = ['😊', '😂', '❤️', '👍', '🎉', '🔥', '✨', '💯', '😘', '🥰', '😍', '🌹'];
+    const emojis = ['😊', '😂', '❤️', '👍', '🎉', '🔥', '✨', '💯', '😘', '🥰', '😍', '🌹', '👋', '💕', '💖', '⭐'];
     
     const picker = document.createElement('div');
     picker.className = 'emoji-picker-simulated';
@@ -370,40 +385,130 @@ function showEmojiPicker() {
     }, 100);
 }
 
-// ===== FILE ATTACHMENT =====
-function handleFileAttachment() {
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = 'image/*,.pdf,.doc,.docx,.txt';
-    fileInput.style.display = 'none';
+// ===== LOVE CALCULATOR FUNCTIONS =====
+function openLoveCalculator() {
+    calculatorModal.classList.add('active');
+    yourNameInput.value = username || '';
+    partnerNameInput.value = '';
+    loveResult.style.display = 'none';
+}
+
+function closeLoveCalculator() {
+    calculatorModal.classList.remove('active');
+}
+
+function calculateLove() {
+    const name1 = yourNameInput.value.trim();
+    const name2 = partnerNameInput.value.trim();
     
-    fileInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            displaySystemMessage(`📎 ${username} shared a file: ${file.name}`);
-            
-            if (stompClient) {
-                const fileMessage = {
-                    sender: username,
-                    content: `📎 Shared file: ${file.name}`,
-                    type: 'CHAT',
-                    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                };
-                stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(fileMessage));
-            }
-        }
-    });
+    if (!name1 || !name2) {
+        alert('Please enter both names!');
+        return;
+    }
     
-    document.body.appendChild(fileInput);
-    fileInput.click();
-    setTimeout(() => fileInput.remove(), 1000);
+    // Calculate love percentage based on names
+    const combined = name1 + name2;
+    let hash = 0;
+    for (let i = 0; i < combined.length; i++) {
+        hash = ((hash << 5) - hash) + combined.charCodeAt(i);
+        hash = hash & hash;
+    }
+    
+    let percentage = Math.abs(hash % 101);
+    
+    // Ensure minimum 10% and maximum 100%
+    percentage = Math.max(10, Math.min(100, percentage));
+    
+    // Display result
+    lovePercentage.textContent = percentage + '%';
+    loveMeter.style.width = percentage + '%';
+    
+    // Set message based on percentage
+    let message = '';
+    let hearts = '';
+    
+    if (percentage >= 90) {
+        message = '❤️ Perfect Match! Soulmates! ❤️';
+        hearts = '💕💖💗';
+    } else if (percentage >= 70) {
+        message = '💕 Great Match! Very Compatible! 💕';
+        hearts = '💕💕💕';
+    } else if (percentage >= 50) {
+        message = '💗 Good Match! You can work it out! 💗';
+        hearts = '💗💗💗';
+    } else if (percentage >= 30) {
+        message = '💔 Average Match. Needs effort! 💔';
+        hearts = '💔💔💔';
+    } else {
+        message = '💔 Difficult Match. But love wins! 💔';
+        hearts = '💔💕💔';
+    }
+    
+    loveMessage.textContent = message;
+    loveHearts.textContent = hearts;
+    
+    loveResult.style.display = 'block';
+}
+
+function shareLoveResult() {
+    const percentage = lovePercentage.textContent;
+    const message = loveMessage.textContent;
+    const name1 = yourNameInput.value;
+    const name2 = partnerNameInput.value;
+    
+    const shareText = `💕 Love Calculator Result 💕\n${name1} ❤️ ${name2}\nCompatibility: ${percentage}\n${message}`;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: 'Love Calculator Result',
+            text: shareText,
+        }).catch(() => {
+            navigator.clipboard.writeText(shareText);
+            alert('Result copied to clipboard!');
+        });
+    } else {
+        navigator.clipboard.writeText(shareText);
+        alert('Result copied to clipboard!');
+    }
+}
+
+function resetLoveCalculator() {
+    partnerNameInput.value = '';
+    loveResult.style.display = 'none';
+}
+
+// ===== CLEAR CHAT =====
+function clearChat() {
+    if (confirm('Clear all messages?')) {
+        messageArea.innerHTML = '';
+        displaySystemMessage('Chat cleared! Start fresh! ✨');
+    }
+}
+
+// ===== SHARE CHAT =====
+function shareChat() {
+    const chatText = 'Join me on Jyoti Chat! 💬\nLet\'s chat!';
+    
+    if (navigator.share) {
+        navigator.share({
+            title: 'Jyoti Chat',
+            text: chatText,
+            url: window.location.href,
+        }).catch(() => {
+            navigator.clipboard.writeText(window.location.href);
+            alert('Chat link copied to clipboard!');
+        });
+    } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert('Chat link copied to clipboard!');
+    }
 }
 
 // ===== AVATAR COLOR UTILITY =====
 function getAvatarColor(messageSender) {
     const colors = [
-        '#ff6b6b', '#ff8e8e', '#ff9a9e', '#fad0c4',
-        '#ffb8b8', '#ffcccc', '#ffd9d9', '#ffe6e6'
+        '#667eea', '#764ba2', '#f43f5e', '#8b5cf6',
+        '#ec4899', '#d946ef', '#a855f7', '#6366f1'
     ];
     
     let hash = 0;
@@ -473,15 +578,48 @@ if (emojiBtn) {
     });
 }
 
-// File attachment
-if (attachBtn) {
-    attachBtn.addEventListener('click', handleFileAttachment);
+// Love Calculator
+if (loveCalculatorBtn) {
+    loveCalculatorBtn.addEventListener('click', openLoveCalculator);
+}
+
+if (closeCalculator) {
+    closeCalculator.addEventListener('click', closeLoveCalculator);
+}
+
+if (calculateBtn) {
+    calculateBtn.addEventListener('click', calculateLove);
+}
+
+if (shareLoveResult) {
+    shareLoveResult.addEventListener('click', shareLoveResult);
+}
+
+if (resetLoveCalculator) {
+    resetLoveCalculator.addEventListener('click', resetLoveCalculator);
+}
+
+// Clear Chat
+if (clearChatBtn) {
+    clearChatBtn.addEventListener('click', clearChat);
+}
+
+// Share Chat
+if (shareChatBtn) {
+    shareChatBtn.addEventListener('click', shareChat);
 }
 
 // Reset notifications on interaction
 chatPage.addEventListener('click', resetNotifications);
 window.addEventListener('focus', resetNotifications);
 messageInput.addEventListener('focus', resetNotifications);
+
+// Close modal on outside click
+calculatorModal.addEventListener('click', (e) => {
+    if (e.target === calculatorModal) {
+        closeLoveCalculator();
+    }
+});
 
 // Close emoji picker on outside click
 document.addEventListener('click', () => {
