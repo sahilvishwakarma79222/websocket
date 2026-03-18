@@ -3,82 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Jyoti's ❤️ Chat</title>
+    <title>JyoSah - Professional Chat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css" />
 </head>
 <body>
-<<<<<<< HEAD
-    <!-- Username Page -->
-    <div id="username-page" class="username-page">
-        <div class="username-page-container glass-effect">
-            <div class="logo-container">
-                <i class="fas fa-comment-dots"></i>
-            </div>
-            <h1 class="title">Jyoti's Chat</h1>
-            <p class="subtitle">Enter your name to join the conversation</p>
-            <form id="usernameForm" name="usernameForm">
-                <div class="form-group">
-                    <div class="input-icon-wrapper">
-                        <i class="fas fa-user"></i>
-                        <input type="text" id="name" placeholder="Your name" autocomplete="off" class="form-control" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary username-submit">
-                        <span>Join Chat</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
-                </div>
-=======
 
-    <div id="username-page" class="page-container">
+    <!-- Login Page (Manual Entry) -->
+    <div id="login-page" class="page-container">
         <div class="login-card">
-            <div class="heart-pulse"><i class="fas fa-heart"></i></div>
-            <h1>Jyoti ❤️ Chat</h1>
-            <form id="usernameForm">
-                <input type="text" id="name" placeholder="Apna naam likhein..." required autocomplete="off" />
-                <button type="submit" class="btn-main">Join Chat</button>
->>>>>>> 4b555f5a06a86f43b26e5570ee9d13e600c6c3f9
+            <div class="brand-logo">
+                <i class="fas fa-comments"></i>
+            </div>
+            <h1>JyoSah<span class="dot-red">.</span></h1>
+            <p class="brand-tagline">Professional Chat</p>
+            
+            <form id="loginForm">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="login-username" placeholder="Username" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="login-password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn-primary">Login →</button>
             </form>
         </div>
     </div>
 
-<<<<<<< HEAD
-    <!-- Chat Page -->
-    <div id="chat-page" class="hidden">
-        <div class="chat-container">
-            <!-- Chat Header -->
-            <div class="chat-header glass-effect">
-                <div class="header-left">
-                    <div class="chat-info">
-                        <h2><i class="fas fa-comment-dots"></i> Jyoti Chat</h2>
-                        <div class="online-status">
-                            <span class="online-dot"></span>
-                            <span id="online-count">1</span> online
-                        </div>
-                    </div>
+    <!-- Username Page (After Login) -->
+    <div id="username-page" class="page-container hidden">
+        <div class="login-card">
+            <div class="brand-logo small">
+                <i class="fas fa-heart"></i>
+            </div>
+            <h2>Welcome to JyoSah</h2>
+            <p class="setup-hint">Apna naam daalein</p>
+            <form id="usernameForm">
+                <div class="input-group">
+                    <i class="fas fa-pen"></i>
+                    <input type="text" id="name" placeholder="Aapka naam kya hai?" required autocomplete="off" />
                 </div>
-                <div class="header-right">
-                    <button id="notification-toggle" class="icon-btn" title="Notifications">
-                        <i class="fas fa-bell"></i>
-                    </button>
-                    <button id="theme-toggle" class="icon-btn" title="Theme">
-                        <i class="fas fa-moon"></i>
-                    </button>
-                    <div class="user-profile">
-                        <div class="avatar" id="header-avatar">J</div>
-                    </div>
-=======
+                <button type="submit" class="btn-primary">Join Chat →</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Chat Page -->
     <div id="chat-page" class="page-container hidden">
         <header class="app-header">
             <div class="header-left">
                 <button id="mobile-menu-toggle" class="icon-btn"><i class="fas fa-users"></i></button>
                 <div class="title-meta">
-                    <h2>Jyoti Chat</h2>
-                    <span class="online-status"><span class="dot"></span> <span id="online-count">1</span> Online</span>
->>>>>>> 4b555f5a06a86f43b26e5570ee9d13e600c6c3f9
+                    <h2>JyoSah<span class="dot-red">.</span></h2>
+                    <span class="online-status"><span class="dot"></span> <span id="online-count">1</span> online</span>
                 </div>
             </div>
             <div class="header-right">
@@ -89,139 +69,36 @@
 
         <div class="main-content">
             <aside id="chat-sidebar" class="sidebar">
-                <div class="sidebar-label">Online Members</div>
-                <div id="onlineUsers" class="user-list"></div>
+                <div class="sidebar-header">
+                    <i class="fas fa-users"></i>
+                    <span>Online Members</span>
+                </div>
+                <div id="onlineUsers" class="user-list">
+                    <!-- Users will appear here -->
+                </div>
             </aside>
 
-<<<<<<< HEAD
-                <!-- Sidebar - Online Users -->
-                <div class="chat-sidebar glass-effect" id="chat-sidebar">
-                    <div class="sidebar-header">
-                        <h3><i class="fas fa-users"></i> Online Members</h3>
-                    </div>
-                    <div class="online-users" id="onlineUsers"></div>
-                    
-                    <!-- Professional Features Section -->
-                    <div class="professional-features">
-                        <div class="feature-buttons">
-                            <button class="feature-btn" id="loveCalculatorBtn">
-                                <i class="fas fa-heart"></i>
-                                <span>Love Calc</span>
-                            </button>
-                            <button class="feature-btn" id="clearChatBtn">
-                                <i class="fas fa-trash"></i>
-                                <span>Clear</span>
-                            </button>
-                            <button class="feature-btn" id="shareChatBtn">
-                                <i class="fas fa-share"></i>
-                                <span>Share</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Messages Area -->
-                <div class="chat-content">
-                    <div class="connecting hidden">
-                        <div class="connecting-spinner"></div>
-                        <span>Connecting...</span>
-                    </div>
-                    
-                    <ul id="messageArea" class="message-area">
-                        <!-- Welcome Message -->
-                        <li class="event-message">
-                            <p>👋 Welcome to Jyoti's Chat!</p>
-                        </li>
-                    </ul>
-
-                    <!-- Typing Indicator -->
-                    <div id="typingIndicator" class="typing-indicator hidden">
-                        <div class="typing-dots">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                        <span id="typingText">Someone is typing...</span>
-                    </div>
-
-                    <!-- Message Input Form - COMPLETELY FIXED FOR MOBILE -->
-                    <form id="messageForm" name="messageForm" class="message-form">
-                        <div class="input-group">
-                            <button type="button" class="icon-btn" id="emojiBtn" title="Emoji">
-                                <i class="far fa-smile"></i>
-                            </button>
-                            <input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control" />
-                            <button type="submit" class="send-btn">
-                                <i class="fas fa-paper-plane"></i>
-                                <span class="send-text">Send</span>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-=======
             <div class="chat-view">
                 <ul id="messageArea" class="message-list">
-                    <li class="event-msg">❤️ Welcome to Jyoti's Chat! ❤️</li>
+                    <li class="event-msg">👋 Welcome to JyoSah Chat!</li>
                 </ul>
 
                 <div id="typingIndicator" class="typing-box hidden">
-                    <span id="typingText">Someone is typing...</span>
+                    <span id="typingText"></span>
                 </div>
 
                 <form id="messageForm" class="input-form">
                     <button type="button" id="emojiBtn" class="icon-btn"><i class="far fa-smile"></i></button>
                     <input type="text" id="message" placeholder="Type a message..." autocomplete="off" />
-                    <button type="submit" class="send-btn"><i class="fas fa-paper-plane"></i></button>
+                    <button type="submit" class="send-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
                 </form>
->>>>>>> 4b555f5a06a86f43b26e5570ee9d13e600c6c3f9
             </div>
         </div>
         <div id="sidebar-overlay" class="overlay hidden"></div>
     </div>
 
-<<<<<<< HEAD
-    <!-- Love Calculator Modal -->
-    <div id="calculatorModal" class="calculator-modal">
-        <div class="calculator-content">
-            <button class="close-calculator"><i class="fas fa-times"></i></button>
-            <div class="calculator-header">
-                <h3>❤️ Love Calculator</h3>
-                <p>Check your compatibility</p>
-            </div>
-            <div class="calculator-body">
-                <div class="input-group-calc">
-                    <label>Your Name</label>
-                    <input type="text" id="yourName" placeholder="Enter your name" value="">
-                </div>
-                <div class="input-group-calc">
-                    <label>Partner's Name</label>
-                    <input type="text" id="partnerName" placeholder="Enter partner's name" value="">
-                </div>
-                <button class="calculate-btn" id="calculateLove">
-                    <i class="fas fa-heart"></i>
-                    Calculate Love
-                </button>
-                <div id="loveResult" class="result-box" style="display: none;">
-                    <div class="result-percentage" id="lovePercentage">0%</div>
-                    <div class="result-meter">
-                        <div class="meter-fill" id="loveMeter" style="width: 0%;"></div>
-                    </div>
-                    <div class="result-message" id="loveMessage"></div>
-                    <div class="result-hearts" id="loveHearts">❤️</div>
-                    <button class="share-result-btn" id="shareLoveResult">
-                        <i class="fas fa-share"></i> Share
-                    </button>
-                    <button class="reset-btn" id="resetLoveCalculator">
-                        <i class="fas fa-redo"></i> Reset
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Scripts -->
-=======
->>>>>>> 4b555f5a06a86f43b26e5570ee9d13e600c6c3f9
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script src="/js/main.js"></script>
