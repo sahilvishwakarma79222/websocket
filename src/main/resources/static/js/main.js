@@ -1,14 +1,16 @@
 'use strict';
 
-// DOM Elements
+let stompClient = null;
+let username = null;
+
 const usernamePage = document.querySelector('#username-page');
 const chatPage = document.querySelector('#chat-page');
 const usernameForm = document.querySelector('#usernameForm');
 const messageForm = document.querySelector('#messageForm');
 const messageInput = document.querySelector('#message');
 const messageArea = document.querySelector('#messageArea');
-const connectingElement = document.querySelector('.connecting');
 const themeToggle = document.querySelector('#theme-toggle');
+<<<<<<< HEAD
 const notificationToggle = document.querySelector('#notification-toggle');
 const headerAvatar = document.querySelector('#header-avatar');
 const onlineUsersList = document.querySelector('#onlineUsers');
@@ -119,10 +121,16 @@ function toggleMobileMenu() {
 }
 
 // ===== CONNECTION FUNCTIONS =====
+=======
+const sidebar = document.querySelector('#chat-sidebar');
+const menuBtn = document.querySelector('#mobile-menu-toggle');
+const overlay = document.querySelector('#sidebar-overlay');
+
+>>>>>>> 4b555f5a06a86f43b26e5570ee9d13e600c6c3f9
 function connect(event) {
     username = document.querySelector('#name').value.trim();
-    
     if(username) {
+<<<<<<< HEAD
         headerAvatar.textContent = username.charAt(0).toUpperCase();
         if (yourNameInput) yourNameInput.value = username;
         
@@ -132,37 +140,25 @@ function connect(event) {
             chatPage.classList.remove('hidden');
             chatPage.style.animation = 'fadeIn 0.3s ease';
         }, 300);
+=======
+        usernamePage.classList.add('hidden');
+        chatPage.classList.remove('hidden');
+>>>>>>> 4b555f5a06a86f43b26e5570ee9d13e600c6c3f9
 
         const socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
-        
-        stompClient.debug = null;
-        
-        stompClient.connect({}, onConnected, onError);
+        stompClient.connect({}, onConnected, (err) => alert("Error connecting!"));
     }
     event.preventDefault();
 }
 
 function onConnected() {
     stompClient.subscribe('/topic/public', onMessageReceived);
-    stompClient.subscribe('/topic/users', onUserListUpdate);
-    
-    stompClient.send("/app/chat.addUser",
-        {},
-        JSON.stringify({sender: username, type: 'JOIN'})
-    );
-    
-    connectingElement.style.animation = 'fadeOut 0.3s ease';
-    setTimeout(() => {
-        connectingElement.classList.add('hidden');
-    }, 300);
-    
-    onlineUsers.add(username);
-    updateOnlineUsersList();
-    
-    resetNotifications();
+    stompClient.send("/app/chat.addUser", {}, JSON.stringify({sender: username, type: 'JOIN'}));
+    document.querySelector('#header-avatar').textContent = username.charAt(0).toUpperCase();
 }
 
+<<<<<<< HEAD
 function onError(error) {
     connectingElement.innerHTML = `
         <i class="fas fa-exclamation-circle" style="color: #667eea;"></i>
@@ -173,27 +169,24 @@ function onError(error) {
 }
 
 // ===== MESSAGE HANDLING =====
+=======
+>>>>>>> 4b555f5a06a86f43b26e5570ee9d13e600c6c3f9
 function sendMessage(event) {
-    const messageContent = messageInput.value.trim();
-    
-    if(messageContent && stompClient) {
-        const chatMessage = {
+    const msg = messageInput.value.trim();
+    if(msg && stompClient) {
+        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify({
             sender: username,
-            content: messageContent,
-            type: 'CHAT',
-            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        };
-        
-        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
-        
+            content: msg,
+            type: 'CHAT'
+        }));
         messageInput.value = '';
-        stopTyping();
     }
     event.preventDefault();
 }
 
 function onMessageReceived(payload) {
     const message = JSON.parse(payload.body);
+<<<<<<< HEAD
     
     if(message.type === 'JOIN') {
         onlineUsers.add(message.sender);
@@ -208,71 +201,35 @@ function onMessageReceived(payload) {
     } else {
         displayChatMessage(message);
         notifyNewMessage(message);
-    }
-}
+=======
+    const li = document.createElement('li');
 
-function displayChatMessage(message) {
-    const messageElement = document.createElement('li');
-    messageElement.classList.add('chat-message');
-    
-    const isSentByMe = message.sender === username;
-    messageElement.classList.add(isSentByMe ? 'sent' : 'received');
-    
-    const wrapper = document.createElement('div');
-    wrapper.className = 'message-wrapper';
-    
-    const avatar = document.createElement('div');
-    avatar.className = 'message-avatar';
-    avatar.textContent = message.sender.charAt(0).toUpperCase();
-    avatar.style.background = getAvatarColor(message.sender);
-    
-    const bubble = document.createElement('div');
-    bubble.className = 'message-bubble';
-    
-    if (!isSentByMe) {
-        const sender = document.createElement('div');
-        sender.className = 'message-sender';
-        sender.textContent = message.sender;
-        bubble.appendChild(sender);
+    if(message.type === 'JOIN' || message.type === 'LEAVE') {
+        li.className = 'event-msg';
+        li.textContent = `${message.sender} ${message.type === 'JOIN' ? 'joined!' : 'left!'}`;
+    } else {
+        li.className = `chat-message ${message.sender === username ? 'sent' : 'received'}`;
+        const nameSpan = message.sender === username ? '' : `<span class="sender-name">${message.sender}</span>`;
+        li.innerHTML = `${nameSpan}<div>${message.content}</div>`;
+>>>>>>> 4b555f5a06a86f43b26e5570ee9d13e600c6c3f9
     }
-    
-    const content = document.createElement('div');
-    content.className = 'message-content';
-    content.textContent = message.content;
-    bubble.appendChild(content);
-    
-    const time = document.createElement('div');
-    time.className = 'message-time';
-    time.textContent = message.timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    bubble.appendChild(time);
-    
-    wrapper.appendChild(avatar);
-    wrapper.appendChild(bubble);
-    messageElement.appendChild(wrapper);
-    
-    messageArea.appendChild(messageElement);
+
+    messageArea.appendChild(li);
     messageArea.scrollTop = messageArea.scrollHeight;
 }
 
-function displaySystemMessage(text) {
-    const messageElement = document.createElement('li');
-    messageElement.classList.add('event-message');
-    
-    const paragraph = document.createElement('p');
-    paragraph.textContent = text;
-    
-    messageElement.appendChild(paragraph);
-    messageArea.appendChild(messageElement);
-    messageArea.scrollTop = messageArea.scrollHeight;
-}
+// Menu Toggle
+menuBtn.onclick = () => { sidebar.classList.add('active'); overlay.classList.add('active'); };
+overlay.onclick = () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); };
 
-// ===== USER LIST MANAGEMENT =====
-function onUserListUpdate(payload) {
-    const users = JSON.parse(payload.body);
-    onlineUsers = new Set(users);
-    updateOnlineUsersList();
-}
+// Theme Toggle
+themeToggle.onclick = () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    themeToggle.innerHTML = isDark ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+};
 
+<<<<<<< HEAD
 function updateOnlineUsersList() {
     if (!onlineUsersList) return;
     
@@ -638,3 +595,7 @@ window.addEventListener('beforeunload', () => {
         );
     }
 });
+=======
+usernameForm.addEventListener('submit', connect, true);
+messageForm.addEventListener('submit', sendMessage, true);
+>>>>>>> 4b555f5a06a86f43b26e5570ee9d13e600c6c3f9
