@@ -545,3 +545,44 @@ html, body {
     from { opacity: 1; }
     to { opacity: 0; }
 }
+
+/* 📸 Image Message Styles */
+.image-message {
+    max-width: 250px !important;
+    padding: 8px !important;
+}
+
+.image-container {
+    margin: 5px 0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.image-container img {
+    width: 100%;
+    max-width: 220px;
+    max-height: 220px;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    transition: transform 0.2s ease;
+    display: block;
+    cursor: pointer;
+}
+
+.image-container img:hover {
+    transform: scale(1.02);
+}
+
+.chat-message.sent .image-container img {
+    border-color: var(--primary);
+}
+
+/* Loading animation */
+.fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}

@@ -3,6 +3,8 @@
 // State
 let stompClient = null;
 let username = null;
+const imageBtn = document.querySelector('#imageBtn');
+const imageInput = document.querySelector('#imageInput');
 
 // DOM Elements
 const loginPage = document.querySelector('#login-page');
@@ -188,17 +190,12 @@ function onMessageReceived(payload) {
     
     if (message.type === 'JOIN' || message.type === 'LEAVE') {
         addEventMessage(message);
-        
-        // Update online users count (simplified)
-        if (message.type === 'JOIN') {
-            onlineUsers.set(message.sender, true);
-        } else {
-            onlineUsers.delete(message.sender);
-        }
-        onlineCountSpan.textContent = onlineUsers.size;
-        
     } else if (message.type === 'CHAT') {
         addChatMessage(message);
+    } 
+    // ✅ YEH NAYA BLOCK ADD KARO
+    else if (message.type === 'IMAGE') {
+        addImageMessage(message);
     }
 }
 
@@ -289,3 +286,100 @@ window.addEventListener('beforeunload', function() {
         );
     }
 });
+
+// ========== ✅ IMAGE SHARE FUNCTIONALITY ==========
+// Yeh sab kuch file ke end me paste karo
+
+// Image button click - file selector open
+imageBtn.addEventListener('click', function() {
+    imageInput.click();
+});
+
+// Image selected
+imageInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    
+    // Agar file nahi hai to return
+    if (!file) return;
+    
+    // Check - kya WebSocket connected hai?
+    if (!stompClient) {
+        alert('First connect to chat!');
+        return;
+    }
+    
+    // Check file size (max 2MB rakho pehle test ke liye)
+    if (file.size > 2 * 1024 * 1024) {
+        alert('❌ Image too large! Max 2MB');
+        imageInput.value = '';
+        return;
+    }
+    
+    // Loading button
+    imageBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
+    imageBtn.disabled = true;
+    
+    // Convert to Base64
+    const reader = new FileReader();
+    
+    reader.onload = function(readerEvent) {
+        // Base64 image mil gaya
+        const base64Image = readerEvent.target.result;
+        
+        // WebSocket se bhejo
+        const chatMessage = {
+            sender: username,
+            content: base64Image,
+            type: 'IMAGE',
+            timestamp: new Date().toISOString()
+        };
+        
+        stompClient.send("/app/chat.sendMessage", {}, 
+            JSON.stringify(chatMessage));
+        
+        // Button wapas normal
+        imageBtn.innerHTML = '<i class="fas fa-image"></i>';
+        imageBtn.disabled = false;
+    };
+    
+    reader.onerror = function() {
+        alert('Error reading file');
+        imageBtn.innerHTML = '<i class="fas fa-image"></i>';
+        imageBtn.disabled = false;
+    };
+    
+    // Read as Data URL
+    reader.readAsDataURL(file);
+    
+    // Clear input
+    imageInput.value = '';
+});
+// ========== ✅ IMAGE MESSAGE DISPLAY ==========
+function addImageMessage(message) {
+    const li = document.createElement('li');
+    li.className = `chat-message ${message.sender === username ? 'sent' : 'received'} image-message`;
+    
+    const time = message.timestamp ? 
+        new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 
+        'just now';
+    
+    let nameHtml = '';
+    if (message.sender !== username) {
+        nameHtml = `<span class="sender-name">${message.sender}</span>`;
+    }
+    
+    li.innerHTML = `
+        ${nameHtml}
+        <div class="image-container">
+            <img src="${message.content}" 
+                 alt="Shared image" 
+                 style="max-width: 100%; border-radius: 8px; cursor: pointer;"
+                 onclick="window.open(this.src, '_blank')"
+                 title="Click to view full size">
+        </div>
+        <span class="message-time">${time}</span>
+    `;
+    
+    messageArea.appendChild(li);
+    messageArea.scrollTop = messageArea.scrollHeight;
+}

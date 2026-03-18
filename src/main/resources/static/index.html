@@ -87,13 +87,25 @@
                     <span id="typingText"></span>
                 </div>
 
-                <form id="messageForm" class="input-form">
-                    <button type="button" id="emojiBtn" class="icon-btn"><i class="far fa-smile"></i></button>
-                    <input type="text" id="message" placeholder="Type a message..." autocomplete="off" />
-                    <button type="submit" class="send-btn">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </form>
+               <form id="messageForm" class="input-form">
+    <!-- ✅ Naya Image Button - YEH ADD KARO -->
+    <button type="button" id="imageBtn" class="icon-btn">
+        <i class="fas fa-image"></i>
+    </button>
+    
+    <button type="button" id="emojiBtn" class="icon-btn">
+        <i class="far fa-smile"></i>
+    </button>
+    
+    <input type="text" id="message" placeholder="Type a message..." autocomplete="off" />
+    
+    <button type="submit" class="send-btn">
+        <i class="fas fa-paper-plane"></i>
+    </button>
+    
+    <!-- ✅ Hidden file input - YEH BHI ADD KARO -->
+    <input type="file" id="imageInput" accept="image/*" style="display: none;">
+</form>
             </div>
         </div>
         <div id="sidebar-overlay" class="overlay hidden"></div>
