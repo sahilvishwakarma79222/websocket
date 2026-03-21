@@ -1,3 +1,4 @@
+// com/alibou/websocket/config/WebSocketConfig.java
 package com.alibou.websocket.config;
 
 import org.springframework.context.annotation.Configuration;
@@ -19,14 +20,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.setApplicationDestinationPrefixes("/app");
-        registry.enableSimpleBroker("/topic");
+        registry.enableSimpleBroker("/topic", "/queue");  // /queue for private if needed
     }
     
-    //  IMPORTANT: Image ke liye buffer size badhao
     @Override
     public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
-        registration.setMessageSizeLimit(10 * 1024 * 1024);     // 10 MB
-        registration.setSendBufferSizeLimit(10 * 1024 * 1024);  // 10 MB
-        registration.setSendTimeLimit(20000);                    // 20 seconds
+        registration.setMessageSizeLimit(10 * 1024 * 1024);
+        registration.setSendBufferSizeLimit(10 * 1024 * 1024);
+        registration.setSendTimeLimit(20000);
     }
 }

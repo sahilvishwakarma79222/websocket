@@ -159,8 +159,10 @@ function connectWebSocket() {
     stompClient.connect({}, function(frame) {
         console.log('Connected: ' + frame);
         
+        // Subscribe to public topic only
         stompClient.subscribe('/topic/public', onMessageReceived);
         
+        // Send JOIN message
         stompClient.send("/app/chat.addUser", {}, 
             JSON.stringify({
                 sender: username,
@@ -168,7 +170,7 @@ function connectWebSocket() {
             })
         );
         
-        // 🔥 Load note after connection
+        // Load note
         loadNote();
         
     }, function(error) {
@@ -212,24 +214,28 @@ function onMessageReceived(payload) {
     const message = JSON.parse(payload.body);
     console.log('📩 Received:', message.type, 'from:', message.sender);
     
-    if (message.type === 'JOIN' || message.type === 'LEAVE') {
+    if (message.type === 'JOIN') {
         addEventMessage(message);
+        onlineUsers.set(message.sender, true);
+        updateUI();
         
-        if (message.type === 'JOIN') {
-            onlineUsers.set(message.sender, true);
-        } else {
-            onlineUsers.delete(message.sender);
-        }
+    } else if (message.type === 'LEAVE') {
+        addEventMessage(message);
+        onlineUsers.delete(message.sender);
+        updateUI();
         
-        onlineCountSpan.textContent = onlineUsers.size;
-        updateOnlineUsersList();
+    } else if (message.type === 'USER_LIST') {
+        // 🔥 NEW: Update full user list
+        updateUserListFromServer(message.content);
         
     } else if (message.type === 'CHAT') {
         addChatMessage(message);
+        
     } else if (message.type === 'IMAGE') {
         addImageMessage(message);
+        
     } 
-    // 📞 Voice Call Messages
+    // Voice call messages
     else if (message.type === 'CALL_REQUEST') {
         handleIncomingCall(message);
     } else if (message.type === 'CALL_ACCEPT') {
@@ -244,6 +250,63 @@ function onMessageReceived(payload) {
         handleAnswer(message);
     } else if (message.type === 'ICE_CANDIDATE') {
         handleIceCandidate(message);
+    }
+}
+
+// Update UI (online count and user list)
+function updateUI() {
+    onlineCountSpan.textContent = onlineUsers.size;
+    updateOnlineUsersList();
+}
+
+// Update user list from server
+function updateUserListFromServer(userListString) {
+    if (!userListString || userListString === "") return;
+    
+    const users = userListString.split(',');
+    
+    // Clear existing users
+    onlineUsers.clear();
+    
+    // Add all users from server
+    users.forEach(user => {
+        if (user && user.trim() !== "") {
+            onlineUsers.set(user.trim(), true);
+        }
+    });
+    
+    // Update UI
+    updateUI();
+    
+    console.log('📋 Updated user list:', Array.from(onlineUsers.keys()));
+}
+
+
+// Handle existing users list when new user joins
+function handleUserList(message) {
+    console.log('📋 Received user list:', message.content);
+    
+    if (message.content && message.content !== "") {
+        const users = message.content.split(',');
+        
+        users.forEach(user => {
+            if (user && user !== username) {
+                onlineUsers.set(user, true);
+                
+                // Show welcome message for existing users
+                const welcomeMsg = {
+                    sender: user,
+                    type: 'JOIN',
+                    content: ''
+                };
+                addEventMessage(welcomeMsg);
+            }
+        });
+        
+        onlineCountSpan.textContent = onlineUsers.size;
+        updateOnlineUsersList();
+        
+        console.log(`✅ Loaded ${onlineUsers.size} existing users`);
     }
 }
 
@@ -345,7 +408,7 @@ document.querySelector('#emojiBtn').addEventListener('click', function() {
 // ========== DISCONNECT HANDLING ==========
 window.addEventListener('beforeunload', function() {
     if (stompClient && username) {
-        stompClient.send("/app/chat.addUser", {}, 
+        stompClient.send("/app/chat.removeUser", {}, 
             JSON.stringify({
                 sender: username,
                 type: 'LEAVE'

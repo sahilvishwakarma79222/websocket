@@ -1,7 +1,9 @@
+// com/alibou/websocket/config/WebSocketEventListener.java
 package com.alibou.websocket.config;
 
 import com.alibou.websocket.chat.ChatMessage;
 import com.alibou.websocket.chat.MessageType;
+import com.alibou.websocket.chat.ChatController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -16,24 +18,20 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 public class WebSocketEventListener {
 
     private final SimpMessageSendingOperations messagingTemplate;
-    
-    // Agar scheduler add kiya hai to ye dependency bhi le sakte ho
-    // private final ChatCleanupScheduler cleanupScheduler;
+    private final ChatController chatController;
 
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String username = (String) headerAccessor.getSessionAttributes().get("username");
-        String sessionId = headerAccessor.getSessionId(); // Session ID bhi le sakte ho
         
         if (username != null) {
             log.info("User disconnected: {}", username);
             
-            // Agar session tracking use kar rahe ho to yahan remove karo
-            // if (cleanupScheduler != null) {
-            //     cleanupScheduler.updateSessionActivity(sessionId); // Negative update?
-            // }
+            // Remove from active users
+            chatController.getActiveUsers().remove(username);
             
+            // Broadcast LEAVE message
             var chatMessage = ChatMessage.builder()
                     .type(MessageType.LEAVE)
                     .sender(username)
