@@ -1,3 +1,4 @@
+
 'use strict';
 
 // State
@@ -166,6 +167,9 @@ function connectWebSocket() {
                 type: 'JOIN'
             })
         );
+        
+        // 🔥 Load note after connection
+        loadNote();
         
     }, function(error) {
         console.log('Connection error: ' + error);
@@ -928,4 +932,203 @@ speakerBtn.addEventListener('click', function() {
         '<i class="fas fa-volume-up"></i>' : 
         '<i class="fas fa-volume-mute"></i>';
     speakerBtn.classList.toggle('speaker-on', isSpeakerOn);
+});
+
+
+
+// ========== NOTE FUNCTIONALITY ==========
+let currentNote = '';
+
+// Load note from backend
+async function loadNote() {
+    try {
+        const response = await fetch('/api/notes');
+        const data = await response.json();
+        
+        currentNote = data.content;
+        
+        const noteBanner = document.getElementById('noteBanner');
+        const noteText = document.getElementById('noteText');
+        const noteUpdatedBy = document.getElementById('noteUpdatedBy');
+        const noteUpdatedTime = document.getElementById('noteUpdatedTime');
+        
+        if (noteBanner) {
+            noteBanner.classList.remove('hidden');
+            noteText.textContent = data.content;
+            
+            if (data.lastUpdatedBy) {
+                noteUpdatedBy.innerHTML = `<i class="fas fa-user"></i> ${data.lastUpdatedBy}`;
+            } else {
+                noteUpdatedBy.innerHTML = `<i class="fas fa-user"></i> system`;
+            }
+            
+            if (data.lastUpdated) {
+                noteUpdatedTime.innerHTML = `<i class="fas fa-clock"></i> ${data.lastUpdated}`;
+            } else {
+                noteUpdatedTime.innerHTML = `<i class="fas fa-clock"></i> Just now`;
+            }
+        }
+        
+    } catch (error) {
+        console.error('Error loading note:', error);
+        const noteText = document.getElementById('noteText');
+        if (noteText) {
+            noteText.textContent = '✨ Welcome to JyoSah Chat! ✨';
+        }
+    }
+}
+
+// Show edit note modal
+function showEditNoteModal() {
+    // Create modal if not exists
+    let modal = document.getElementById('editNoteModal');
+    
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'editNoteModal';
+        modal.className = 'edit-note-modal hidden';
+        modal.innerHTML = `
+            <div class="edit-note-modal-content">
+                <h3><i class="fas fa-edit"></i> Edit Note</h3>
+                <textarea id="noteInput" placeholder="Write your note here... (max 500 chars)" maxlength="500"></textarea>
+                <div class="char-counter">
+                    <span id="charCount">0</span>/500 characters
+                </div>
+                <div class="modal-buttons">
+                    <button class="save-note-btn">💾 Save Note</button>
+                    <button class="cancel-note-btn">❌ Cancel</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        
+        // Character counter
+        const textarea = modal.querySelector('#noteInput');
+        const charCount = modal.querySelector('#charCount');
+        
+        textarea.addEventListener('input', () => {
+            charCount.textContent = textarea.value.length;
+        });
+        
+        // Save button
+        modal.querySelector('.save-note-btn').addEventListener('click', saveNote);
+        
+        // Cancel button
+        modal.querySelector('.cancel-note-btn').addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+    }
+    
+    // Set current note in textarea
+    const textarea = document.getElementById('noteInput');
+    const charCount = document.getElementById('charCount');
+    
+    if (textarea) {
+        textarea.value = currentNote;
+        if (charCount) charCount.textContent = currentNote.length;
+    }
+    
+    modal.classList.remove('hidden');
+}
+
+// Save note to backend
+async function saveNote() {
+    const textarea = document.getElementById('noteInput');
+    const newNote = textarea.value.trim();
+    
+    if (!newNote) {
+        showToast('Note cannot be empty!', 'error');
+        return;
+    }
+    
+    if (newNote.length > 500) {
+        showToast('Note too long! Maximum 500 characters.', 'error');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/notes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                content: newNote,
+                username: username || 'Anonymous'
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok && data.success) {
+            currentNote = newNote;
+            
+            // Update UI
+            const noteText = document.getElementById('noteText');
+            const noteUpdatedBy = document.getElementById('noteUpdatedBy');
+            const noteUpdatedTime = document.getElementById('noteUpdatedTime');
+            
+            if (noteText) noteText.textContent = newNote;
+            if (noteUpdatedBy) noteUpdatedBy.innerHTML = `<i class="fas fa-user"></i> ${username || 'Anonymous'}`;
+            if (noteUpdatedTime) {
+                const now = new Date();
+                const formattedTime = now.toLocaleString('en-IN', { 
+                    day: 'numeric', 
+                    month: 'short', 
+                    year: 'numeric',
+                    hour: '2-digit', 
+                    minute: '2-digit'
+                });
+                noteUpdatedTime.innerHTML = `<i class="fas fa-clock"></i> ${formattedTime}`;
+            }
+            
+            // Close modal
+            const modal = document.getElementById('editNoteModal');
+            if (modal) modal.classList.add('hidden');
+            
+            // Show success message
+            showToast('✅ Note updated successfully!', 'success');
+            
+        } else {
+            showToast(data.error || 'Failed to update note', 'error');
+        }
+        
+    } catch (error) {
+        console.error('Error saving note:', error);
+        showToast('Failed to save note. Check connection.', 'error');
+    }
+}
+
+// Toast notification function
+function showToast(message, type = 'info') {
+    // Remove existing toast
+    const existingToast = document.querySelector('.toast-notification');
+    if (existingToast) existingToast.remove();
+    
+    const toast = document.createElement('div');
+    toast.className = `toast-notification ${type}`;
+    toast.innerHTML = `
+        <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+        <span>${message}</span>
+    `;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.animation = 'fadeOut 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// Add edit button event listener
+document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('click', (e) => {
+        const editBtn = e.target.closest('#editNoteBtn');
+        if (editBtn) {
+            if (username) {
+                showEditNoteModal();
+            } else {
+                showToast('Please login first to edit note', 'error');
+            }
+        }
+    });
 });

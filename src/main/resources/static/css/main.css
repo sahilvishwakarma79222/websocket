@@ -1055,3 +1055,256 @@ html, body {
     font-weight: 500;
     margin-top: 10px;
 }
+
+
+/* ========== NOTE BANNER STYLES ========== */
+.note-banner {
+    background: linear-gradient(135deg, #ff4d6d08, #8B5CF608);
+    border-bottom: 2px solid var(--primary);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 0.85rem;
+    backdrop-filter: blur(5px);
+    position: relative;
+    z-index: 9;
+    transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .note-banner {
+    background: linear-gradient(135deg, #8B5CF608, #ff4d6d08);
+    border-bottom-color: var(--primary);
+}
+
+.note-content-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    flex-wrap: wrap;
+}
+
+.note-content-wrapper i {
+    color: var(--primary);
+    font-size: 1rem;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-2px); }
+}
+
+.note-text {
+    color: var(--text);
+    font-weight: 500;
+    word-break: break-word;
+    flex: 1;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.edit-note-icon {
+    background: none;
+    border: none;
+    color: var(--primary);
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: all 0.3s;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.edit-note-icon:hover {
+    background: var(--primary-light);
+    transform: scale(1.05);
+}
+
+.edit-note-icon i {
+    margin: 0;
+}
+
+.note-meta {
+    display: flex;
+    gap: 20px;
+    font-size: 0.7rem;
+    color: var(--text-light);
+}
+
+.note-meta span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.note-meta i {
+    font-size: 0.65rem;
+}
+
+/* Edit Note Modal */
+.edit-note-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 4000;
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.2s ease;
+}
+
+.edit-note-modal.hidden {
+    display: none;
+}
+
+.edit-note-modal-content {
+    background: var(--surface);
+    border-radius: 24px;
+    padding: 28px;
+    width: 90%;
+    max-width: 550px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+}
+
+.edit-note-modal-content h3 {
+    color: var(--text);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.3rem;
+}
+
+.edit-note-modal-content h3 i {
+    color: var(--primary);
+}
+
+.edit-note-modal-content textarea {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.95rem;
+    resize: vertical;
+    min-height: 120px;
+    font-family: inherit;
+    transition: 0.3s;
+}
+
+.edit-note-modal-content textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.char-counter {
+    text-align: right;
+    font-size: 0.75rem;
+    color: var(--text-light);
+    margin-top: 8px;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.modal-buttons button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+    font-size: 0.9rem;
+}
+
+.save-note-btn {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+}
+
+.save-note-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
+}
+
+.cancel-note-btn {
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
+.cancel-note-btn:hover {
+    background: var(--border);
+}
+
+/* Toast Notification */
+.toast-notification {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface);
+    color: var(--text);
+    padding: 12px 24px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    z-index: 5000;
+    animation: slideUp 0.3s ease;
+    border-left: 4px solid var(--primary);
+}
+
+.toast-notification.success {
+    border-left-color: #2ecc71;
+}
+
+.toast-notification.success i {
+    color: #2ecc71;
+}
+
+.toast-notification i {
+    font-size: 1.1rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .note-banner {
+        padding: 8px 12px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .note-meta {
+        font-size: 0.6rem;
+        gap: 12px;
+    }
+    
+    .edit-note-modal-content {
+        padding: 20px;
+    }
+    
+    .toast-notification {
+        bottom: 80px;
+        padding: 10px 20px;
+        font-size: 0.85rem;
+    }
+}
